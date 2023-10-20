@@ -58,12 +58,12 @@ while True:
     length = recvall(conn, 64)
     length = length.decode('utf-8')
 
-    stringData = recvall(conn, int(length1))
+    stringData = recvall(conn, int(length))
 
     data = np.frombuffer(base64.b64decode(stringData), np.uint8)
     decimg = cv2.imdecode(data, 1)
 
-    direction_probability = predict_direction(model, frame)
+    direction_probability = predict_direction(model, decimg)
     left = direction_probability[0]
     center = direction_probability[1]
     right = direction_probability[2]

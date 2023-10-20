@@ -18,10 +18,7 @@ def preprocess_image(image):
     masked_img = cv2.inRange(hsv, lower_orange, upper_orange)
     cv2.imshow('mask', masked_img)
 
-    image = cv2.Canny(masked_img, 100, 200);
-    cv2.imshow('canny', image)
-
-    image = cv2.GaussianBlur(image, (3,3), 0)
+    image = cv2.GaussianBlur(masked_img, (3,3), 0)
     image = cv2.resize(image, (256, 256))
     image = image / 255
     return image
@@ -38,7 +35,7 @@ if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
   logging.info('Lane Navigation Model Loading...')
 
-  model = load_model('model/autonomous_lane_navigation.h5')
+  model = load_model('model/XXX')
 
   logging.info('Lane Navigation Model Loading Complete')
 

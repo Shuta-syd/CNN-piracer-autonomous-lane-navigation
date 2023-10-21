@@ -1,8 +1,7 @@
 import socket
 import cv2
 import numpy as np
-import time
-import piracer
+from piracer import vehicles, control_piracer
 import base64
 
 TCP_SERVER_IP = '192.168.86.34'
@@ -17,7 +16,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 
 while True:
-  vehicle = piracer.vehicles.PiRacerStandard()
+  vehicle = vehicles.PiRacerStandard()
   ret, original_frame = cap.read()
   if ret == False:
     break
@@ -35,7 +34,7 @@ while True:
   direction_str = s.recv(1024)
   direction = int(direction_str.decode())
   print('Direction: ', direction)
-  piracer.control_piracer.set_steering_direction(piracer=vehicle, direction=direction)
+  control_piracer.control(piracer=vehicle, direction=direction)
 
 cap.release()
 cv2.destroyAllWindows()

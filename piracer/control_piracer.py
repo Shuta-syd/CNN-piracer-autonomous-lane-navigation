@@ -1,4 +1,4 @@
-def set_steering_direction(piracer=None, direction=2):
+def control(piracer=None, direction=2):
     if piracer is None:
         return
 

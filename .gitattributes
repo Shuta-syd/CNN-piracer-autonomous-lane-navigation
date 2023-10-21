@@ -1,5 +1,2 @@
 *.gz filter=lfs diff=lfs merge=lfs -text
-model/model1020-nvdia-(200,[[:space:]]66,[[:space:]]1)/lane_navigation_check.h5 filter=lfs diff=lfs merge=lfs -text
-model/model1020-nvdia-(200,[[:space:]]66,[[:space:]]1)/lane_navigation_final.h5 filter=lfs diff=lfs merge=lfs -text
-model/model1020-VGG16-(255,[[:space:]]255,[[:space:]]1)/lane_navigation_check.h5 filter=lfs diff=lfs merge=lfs -text
-model/model1020-VGG16-(255,[[:space:]]255,[[:space:]]1)/lane_navigation_final.h5 filter=lfs diff=lfs merge=lfs -text
+model/*/*.h5 filter=lfs diff=lfs merge=lfs -text

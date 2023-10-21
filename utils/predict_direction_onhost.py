@@ -7,17 +7,10 @@ from keras.models import load_model
 import tensorflow as tf
 
 def preprocess_image(image):
-    lower_orange = np.array([0, 40, 40])
-    upper_orange = np.array([30, 255, 255])
-
     height, _, _ = image.shape
     image = image[int(height/5):,:,:]
 
-    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-    masked_img = cv2.inRange(hsv, lower_orange, upper_orange)
-    cv2.imshow('mask', masked_img)
-
-    image = cv2.GaussianBlur(masked_img, (3,3), 0)
+    image = cv2.GaussianBlur(image, (3,3), 0)
     image = cv2.resize(image, (256, 256))
     image = image / 255
     return image
@@ -41,7 +34,7 @@ def recvall(sock, count):
 logging.basicConfig(level=logging.INFO)
 logging.info('Lane Navigation Model Loading...')
 
-model = load_model('model/XXX')
+model = load_model('model/model1020-VGG16-(256, 256, 3)/lane_navigation_final.h5')
 
 logging.info('Lane Navigation Model Loading Complete')
 

@@ -2,7 +2,7 @@ import socket
 import cv2
 import numpy as np
 import logging
-import base64
+import webrtc
 from keras.models import load_model
 import tensorflow as tf
 

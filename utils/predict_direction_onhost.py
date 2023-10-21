@@ -45,8 +45,8 @@ model = load_model('model/XXX')
 
 logging.info('Lane Navigation Model Loading Complete')
 
-TCP_IP = '0.0.0.0'
-TCP_PORT = 12345
+TCP_IP = '192.168.86.34'
+TCP_PORT = 5001
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)

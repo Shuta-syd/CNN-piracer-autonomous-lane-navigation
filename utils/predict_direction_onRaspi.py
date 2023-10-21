@@ -5,8 +5,8 @@ import time
 import piracer
 import base64
 
-TCP_SERVER_IP = '0.0.0.0'
-TCP_SERVER_PORT = 12345
+TCP_SERVER_IP = '192.168.86.34'
+TCP_SERVER_PORT = 5001
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((TCP_SERVER_IP, TCP_SERVER_PORT))
 print(u'Client socket is connected with Server socket [ TCP_SERVER_IP: ' + TCP_SERVER_IP + ', TCP_SERVER_PORT: ' + str(TCP_SERVER_PORT) + ' ]')

@@ -6,6 +6,7 @@ from keras.models import load_model
 import tensorflow as tf
 from piracer import vehicles, control_piracer
 
+DIRECTION = ["LEFT", "STRAIGHT", "RIGHT"]
 
 def preprocess_image(image):
     height, _, _ = image.shape
@@ -37,28 +38,25 @@ if __name__ == '__main__':
   cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
   cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 
-  frame_cnt = 0
-  PREDICT_CNT = 5
+  frame_cnt = -1
+  PREDICT_LIMITATION = 4
   while(cap.isOpened()):
-    if frame_cnt % PREDICT_CNT != 0: continue
-    if frame_cnt == 20: frame_cnt = 0
+    frame_cnt += 1
+    if frame_cnt > 20:
+        frame_cnt = -1
+    if frame_cnt % PREDICT_LIMITATION != 0:
+        continue
 
     ret, original_frame = cap.read()
-    frame_cnt += 1
     if ret == False:
       break
 
-    frame = cv2.flip(original_frame, -1)
-    cv2.imshow('frame', frame)
-
-    direction_probability = predict_direction(model, frame)
-    direction = np.argmax(direction_probability)
-    print('direction: ', direction)
-
-    control_piracer.control(piracer=vehicle, direction=direction)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
+    if frame_cnt % PREDICT_LIMITATION == 0:
+        frame = cv2.flip(original_frame, -1)
+        direction_probability = predict_direction(model, frame)
+        direction_index = np.argmax(direction_probability)
+        print(f'direction: {direction_index} ', DIRECTION[direction_index])
+        control_piracer.control(piracer=vehicle, direction=direction_index)
 
   cap.release()
   cv2.destroyAllWindows()

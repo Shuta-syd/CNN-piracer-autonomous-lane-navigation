@@ -42,10 +42,10 @@ logging.info('Lane Navigation Model Loading Complete')
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
-print(u'Server socket [ TCP_IP: ' + TCP_IP + ', TCP_PORT: ' + str(TCP_PORT) + ' ] is open')
-conn, addr = s.accept()
-print(u'Server socket is connected with client socket [', addr, u']')
+#s.listen(1)
+#print(u'Server socket [ TCP_IP: ' + TCP_IP + ', TCP_PORT: ' + str(TCP_PORT) + ' ] is open')
+# conn, addr = s.accept()
+#print(u'Server socket is connected with client socket [', addr, u']')
 
 dat = b''
 dump_buffer(s)
@@ -59,13 +59,16 @@ while True:
   image = cv2.imdecode(np.fromstring(dat, dtype=np.uint8), 1)
   dat = b''
 
+  cv2.imshow('frame', image)
   direction_probability = predict_direction(model, image)
   direction = np.argmax(direction_probability)
 
-  direction_str = str(direction).encode()
-  conn.send(direction_str)
+  if cv2.waitKey(1) & 0xFF == ord('q'):
+    break
+  # direction_str = str(direction).encode()
+  # conn.send(direction_str)
 
-conn.close()
+# conn.close()
 
 # https://millo-l.github.io/Python-Implementing%20TCP%20image%20socket-Server-Client/
 # https://medium.com/@fromtheast/fast-camera-live-streaming-with-udp-opencv-de2f84c73562

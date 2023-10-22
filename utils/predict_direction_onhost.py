@@ -2,9 +2,13 @@ import socket
 import cv2
 import numpy as np
 import logging
-import webrtc
+import struct
 from keras.models import load_model
 import tensorflow as tf
+
+MAX_DGRAM = 2**16
+TCP_IP = '192.168.86.34'
+TCP_PORT = 5001
 
 def preprocess_image(image):
     height, _, _ = image.shape
@@ -21,56 +25,47 @@ def predict_direction(model=None, frame=None):
     direction_probability = model.predict(X)[0]
     return direction_probability
 
-def recvall(sock, count):
-    buf = b''
-    while count:
-        newbuf = sock.recv(count)
-        if not newbuf: return None
-        buf += newbuf
-        count -= len(newbuf)
-    return buf
-
+def dump_buffer(s):
+  while True:
+    seg, addr = s.recvfrom(MAX_DGRAM)
+    print(seg[0])
+    if struct.unpack('B', seg[0:1])[0] == 1:
+      print('finish emptying buffer')
+      break
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Lane Navigation Model Loading...')
 
-model = load_model('model/model1020-VGG16-(256, 256, 3)/lane_navigation_final.h5')
+model = load_model('./model/model1020-VGG16-(256, 256, 3)/lane_navigation_final.h5')
 
 logging.info('Lane Navigation Model Loading Complete')
 
-TCP_IP = '192.168.86.34'
-TCP_PORT = 5001
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 print(u'Server socket [ TCP_IP: ' + TCP_IP + ', TCP_PORT: ' + str(TCP_PORT) + ' ] is open')
 conn, addr = s.accept()
 print(u'Server socket is connected with client socket [', addr, u']')
 
+dat = b''
+dump_buffer(s)
+
 while True:
-    length = recvall(conn, 64)
-    length = length.decode('utf-8')
+  seg, addr = s.recvfrom(MAX_DGRAM)
+  if struct.unpack('B', seg[0:1])[0] > 1:
+    dat += seg[1:]
+  else:
+    dat += seg[1:]
+  image = cv2.imdecode(np.fromstring(dat, dtype=np.uint8), 1)
+  dat = b''
 
-    stringData = recvall(conn, int(length))
+  direction_probability = predict_direction(model, image)
+  direction = np.argmax(direction_probability)
 
-    data = np.frombuffer(base64.b64decode(stringData), np.uint8)
-    decimg = cv2.imdecode(data, 1)
-
-    direction_probability = predict_direction(model, decimg)
-    left = direction_probability[0]
-    center = direction_probability[1]
-    right = direction_probability[2]
-
-    if (left > center) and (left > right):
-      direction = 1
-    elif (right > center) and (right > left):
-      direction = 3
-    else:
-      direction = 2
-
-    direction_str = str(direction).encode()
-    conn.send(direction_str)
+  direction_str = str(direction).encode()
+  conn.send(direction_str)
 
 conn.close()
 
 # https://millo-l.github.io/Python-Implementing%20TCP%20image%20socket-Server-Client/
+# https://medium.com/@fromtheast/fast-camera-live-streaming-with-udp-opencv-de2f84c73562

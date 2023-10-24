@@ -24,14 +24,15 @@ def predict_direction(model=None, frame=None):
     return direction_probability
 
 if __name__ == '__main__':
-  vehicle = vehicles.PiRacerStandard()
-
   logging.basicConfig(level=logging.INFO)
   logging.info('Lane Navigation Model Loading...')
 
-  model = load_model('model/model1021-nvdia-(200, 66, 3)/lane_navigation_final.h5')
+  model = load_model('model/model1025-nvdia-(200,100,3)/lane_navigation_final.h5')
 
   logging.info('Lane Navigation Model Loading Complete')
+
+  vehicle = vehicles.PiRacerStandard()
+  vehicle.set_throttle_percent(0.2)
 
   cap = cv2.VideoCapture(0)
   cap.set(cv2.CAP_PROP_FPS, 20)

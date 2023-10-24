@@ -7,4 +7,3 @@ def control(piracer=None, direction=2):
     if direction == 2: scaled_percent = 1   # right
 
     piracer.set_steering_percent(scaled_percent)
-    piracer.set_throttle_percent(0.2)

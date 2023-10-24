@@ -2,3 +2,4 @@ dataset/*
 dataset_augmented/*
 .DS_Store
 model/archive
+dataset*

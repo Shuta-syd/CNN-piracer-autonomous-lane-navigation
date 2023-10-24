@@ -7,9 +7,6 @@ The Convolutional Neural Network(CNN) is a Deep Learning algorithm that can extr
 [What are convolutional neural networks? by IBM](https://www.ibm.com/topics/convolutional-neural-networks)  
 [Convolutional Neural Networks cheatsheet](https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-convolutional-neural-networks)
 
-## Why CNN is used for this project?
-
-
 ## How do you build CNN Model?
 ### Convolution Layer
 The objective of the Convolution Operation is to extract the high-level features such as edges, from the input image. CNN need not be limited to only one Convolutional Layer. Conventionally, the first ConvLayer is responsible for capturing the Low-Level features such as edges, color, gradient orientation, etc. With added layers, the architecture adapts to the High-Level features as well, giving us a network that has a wholesome understanding of images in the dataset, similar to how we would.

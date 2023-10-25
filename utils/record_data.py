@@ -38,10 +38,10 @@ def record_data(vehicle):
             frame       = cv2.flip(frame, -1)
             steering    = vehicle.get_steering_raw_data()
             direction   = 1
-            if (steering < 3000):
-                direction = 2
-            elif (steering > 5500):
+            if (steering > 5500):
                 direction = 3
+            elif (steering > 4000):
+                direction = 2
 
             if not rst:
                 print(

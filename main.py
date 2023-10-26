@@ -24,40 +24,42 @@ def predict_direction(model=None, frame=None):
     return direction_probability
 
 if __name__ == '__main__':
-  logging.basicConfig(level=logging.INFO)
-  logging.info('Lane Navigation Model Loading...')
+  try:
+    logging.basicConfig(level=logging.INFO)
+    logging.info('Lane Navigation Model Loading...')
 
-  model = load_model('model/model-nvdia-(240,180,3)-5class/lane_navigation_final.h5')
+    model = load_model('model/model-nvdia-(240,180,3)-5class/lane_navigation_final.h5')
 
-  logging.info('Lane Navigation Model Loading Complete')
+    logging.info('Lane Navigation Model Loading Complete')
 
-  vehicle = vehicles.PiRacerStandard()
-  vehicle.set_throttle_percent(0.2)
+    vehicle = vehicles.PiRacerStandard()
+    vehicle.set_throttle_percent(0.2)
 
-  cap = cv2.VideoCapture(0)
-  cap.set(cv2.CAP_PROP_FPS, 20)
-  cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-  cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FPS, 20)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 
-  frame_cnt = -1
-  PREDICT_LIMITATION = 4
-  while(cap.isOpened()):
-    frame_cnt += 1
-    if frame_cnt > 20:
-        frame_cnt = -1
-    if frame_cnt % PREDICT_LIMITATION != 0:
-        continue
+    frame_cnt = -1
+    PREDICT_LIMITATION = 4
+    while(cap.isOpened()):
+      frame_cnt += 1
+      if frame_cnt > 20:
+          frame_cnt = -1
+      if frame_cnt % PREDICT_LIMITATION != 0:
+          continue
 
-    ret, original_frame = cap.read()
-    if ret == False:
-      break
+      ret, original_frame = cap.read()
+      if ret == False:
+        break
 
-    if frame_cnt % PREDICT_LIMITATION == 0:
-        frame = cv2.flip(original_frame, -1)
-        direction_probability = predict_direction(model, frame)
-        direction_index = np.argmax(direction_probability)
-        print(f'direction: {direction_index} ', DIRECTION[direction_index])
-        control_piracer.control(piracer=vehicle, direction=direction_index)
-
-  cap.release()
-  cv2.destroyAllWindows()
+      if frame_cnt % PREDICT_LIMITATION == 0:
+          frame = cv2.flip(original_frame, -1)
+          direction_probability = predict_direction(model, frame)
+          direction_index = np.argmax(direction_probability)
+          print(f'direction: {direction_index} ', DIRECTION[direction_index])
+          control_piracer.control(piracer=vehicle, direction=direction_index)
+  finally:
+    cap.release()
+    vehicle.set_throttle_percent(0)
+    vehicle.set_steering_percent(0)

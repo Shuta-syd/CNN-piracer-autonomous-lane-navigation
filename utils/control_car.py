@@ -8,7 +8,7 @@ from color_code.color import *
 
 # - variables
 TERM_SIZE = os.get_terminal_size().columns
-THROTTLE_PARAM = 0.6
+THROTTLE_PARAM = 0.2
 STEERING_PARAM = -1.5
 
 # - control car program

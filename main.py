@@ -27,7 +27,7 @@ if __name__ == '__main__':
   logging.basicConfig(level=logging.INFO)
   logging.info('Lane Navigation Model Loading...')
 
-  model = load_model('model/model1026-nvdia-(200,100,3)/lane_navigation_final.h5')
+  model = load_model('model/model-nvdia-(240,180,3)-5class/lane_navigation_final.h5')
 
   logging.info('Lane Navigation Model Loading Complete')
 

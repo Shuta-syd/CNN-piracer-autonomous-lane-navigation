@@ -6,13 +6,13 @@ import time
 from color_code.color import *
 
 # - variables
-index = 1
 VIDEO = 0
 DATASET = "dataset/"
 TERM_SIZE = os.get_terminal_size().columns
 
 # - capture img program
 def record_data(vehicle):
+    index = 1
     print(
         f"{CYA}{BOL}[INFORMT]{RES}    ",
         f"Capture-img process has been started at:",
@@ -37,11 +37,16 @@ def record_data(vehicle):
             rst, frame  = cap.read()
             frame       = cv2.flip(frame, -1)
             steering    = vehicle.get_steering_raw_data()
-            direction   = 1
-            if (steering > 5500):
+            direction   = 0
+            if (steering > 6500):
+                direction = 4
+            elif (steering > 5500):
                 direction = 3
             elif (steering > 4000):
                 direction = 2
+            elif (steering < 3000):
+                direction = 1
+
 
             if not rst:
                 print(
@@ -59,7 +64,7 @@ def record_data(vehicle):
                 )
                 break
 
-            cv2.imwrite(f'{DATASET}/frames/frame_{index:04d}_{direction:04d}.jpg', frame)
+            cv2.imwrite(f'{DATASET}/frame10_{index:04d}_{direction:04d}.jpg', frame)
             index += 1
 
     except Exception as exception:
